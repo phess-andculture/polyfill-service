@@ -4,7 +4,7 @@
 		"chrome": "<39",
 		"firefox": "<31",
 		"ie": "*",
-		"opera": "<26",
+		"opera": "<20",
 		"safari": "*",
 		"android": "*",
 		"firefox_mob": "<31",

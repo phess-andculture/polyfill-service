@@ -7,7 +7,7 @@
 		"bb": "*",
 		"chrome": "<57",
 		"firefox": "<48",
-		"opera": "<44",
+		"opera": "<20",
 		"safari": "<10",
 		"ie": "<15",
 		"ie_mob": "*",

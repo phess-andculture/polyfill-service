@@ -11,7 +11,7 @@
 		"firefox": "3.6 - 21",
 		"ie": "*",
 		"ie_mob": "10 - *",
-		"opera": "<32",
+		"opera": "<20",
 		"op_mini": "*",
 		"op_mob": "*",
 		"safari": "*",

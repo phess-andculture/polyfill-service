@@ -14,7 +14,7 @@
 		"chrome": "* - 33",
 		"firefox": "* - 33",
 		"safari": "4 - 7.0",
-		"opera": "* - 20",
+		"opera": "<20",
 		"op_mini": "*",
 		"op_mob": "* - 32",
 		"android": "* - 4.4.4",

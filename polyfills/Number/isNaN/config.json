@@ -16,7 +16,7 @@
 		"android": "<4.1",
 		"safari": "<9",
 		"ios_saf": "<9",
-		"opera": "<21",
+		"opera": "<20",
 		"op_mini": "*",
 		"op_mob": "<33",
 		"bb": "*"

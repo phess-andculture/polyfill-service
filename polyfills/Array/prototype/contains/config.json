@@ -4,7 +4,7 @@
 		"firefox": "*",
 		"ie": "*",
 		"ie_mob": "10 - *",
-		"opera": "*",
+		"opera": "<20",
 		"safari": "*",
 		"firefox_mob": "*",
 		"samsung_mob": "*"

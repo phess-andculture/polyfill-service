@@ -14,7 +14,7 @@
 		"ie_mob": "*",
 		"safari": "*",
 		"firefox_mob": "<29",
-		"opera": "<36",
+		"opera": "<20",
 		"android": "*",
 		"samsung_mob": "<5",
 		"ios_saf": "*"

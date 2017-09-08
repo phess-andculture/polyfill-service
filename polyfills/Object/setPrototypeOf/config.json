@@ -12,7 +12,7 @@
 		"ios_saf": "< 9",
 		"ie": "9 - 11",
 		"ie_mob": "*",
-		"opera": "< 34",
+		"opera": "<20",
 		"op_mini": "*",
 		"safari": "< 9",
 		"firefox_mob": "< 31"

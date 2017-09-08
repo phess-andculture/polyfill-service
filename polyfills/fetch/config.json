@@ -5,7 +5,7 @@
 		"ie": "< 15",
 		"ie_mob": "*",
 		"firefox": "* - 38",
-		"opera": "* - 28",
+		"opera": "<20",
 		"safari": "< 10.1",
 		"chrome": "* - 41",
 		"ios_saf": "< 10.3 ",

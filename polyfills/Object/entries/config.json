@@ -12,7 +12,7 @@
 		"firefox": "< 47",
 		"firefox_mob": "< 47",
 		"android": "< 51",
-		"opera": "*",
+		"opera": "<20",
 		"op_mob": "*",
 		"op_mini": "*",
 		"samsung_mob": "*",

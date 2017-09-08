@@ -11,7 +11,7 @@
 		"firefox": "<34",
 		"android": "*",
 		"ios_saf": "<9",
-		"opera": "<25",
+		"opera": "<20",
 		"firefox_mob": "<34",
 		"bb": "10 - *"
 	},

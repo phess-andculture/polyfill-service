@@ -3,7 +3,7 @@
 		"ie": "7 - *",
 		"ie_mob": "10 - *",
 		"firefox": "4 - 37",
-		"opera": "11.6 - 29",
+		"opera": "<20",
 		"safari": "6 - *",
 		"chrome": "* - 38",
 		"ios_saf": "*",
