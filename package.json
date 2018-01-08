@@ -49,7 +49,8 @@
 		"purge-cdn": "node tasks/node/purge",
 		"heroku-postbuild": "npm run build",
 		"update-browserstack-list": "node tasks/node/updatebrowserstacklist",
-		"whitesource": "whitesource run"
+		"whitesource": "whitesource run",
+		"verify-compat": "node tasks/node/verifycompat"
 	},
 	"license": "CC0-1.0",
 	"engines": {
