@@ -26,8 +26,6 @@ var arePropertyDescriptorsSupported = function() {
 
 var supportsDescriptors = Object.defineProperty && arePropertyDescriptorsSupported();
 
-var functionsHaveNames = (function foo() {}).name === 'foo';
-
 var hasSymbols = typeof Symbol === 'function' && typeof Symbol() === 'symbol';
 
 var objectKeysWorksWithPrimitives = (function() {
@@ -39,10 +37,14 @@ var objectKeysWorksWithPrimitives = (function() {
 }());
 
 it('should have name `entries`', function() {
+	var functionsHaveNames = (function foo() {}).name === 'foo';
 	if (functionsHaveNames) {
 		proclaim.equal(Object.entries.name, 'entries');
 	} else {
-		this.skip();
+		function nameOf(fn) {
+			return Function.prototype.toString.call(fn).match(/function\s*([^\s]*)\s*\(/)[1];
+		}
+		proclaim.equal(nameOf(Object.entries), 'entries');
 	}
 });
 
