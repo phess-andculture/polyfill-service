@@ -10,10 +10,48 @@ it('has correct argument length', function () {
 	proclaim.strictEqual(Array.prototype.copyWithin.length, 2);
 });
 
+it('has correct name', function() {
+	var functionsHaveNames = (function foo() {}).name === 'foo';
+	if (functionsHaveNames) {
+		proclaim.equal(Array.prototype.copyWithin.name, 'copyWithin');
+	} else {
+		function nameOf(fn) {
+			return Function.prototype.toString.call(fn).match(/function\s*([^\s]*)\s*\(/)[1];
+		}
+		proclaim.equal(nameOf(Array.prototype.copyWithin), 'copyWithin');
+	}
+});
+
+var arePropertyDescriptorsSupported = function () {
+	var obj = {};
+	try {
+		Object.defineProperty(obj, 'x', { enumerable: false, value: obj });
+        /* eslint-disable no-unused-vars, no-restricted-syntax */
+        for (var _ in obj) { return false; }
+        /* eslint-enable no-unused-vars, no-restricted-syntax */
+		return obj.x === obj;
+	} catch (e) { // this is IE 8.
+		return false;
+	}
+};
+var ifSupportsDescriptors = Object.defineProperty && arePropertyDescriptorsSupported() ? it : xit;
+
+ifSupportsDescriptors('property isn\'t enumerable', function () {
+	proclaim.isFalse(Object.prototype.propertyIsEnumerable.call(Array.prototype.copyWithin));
+});
+
 it('modifies the object in-place', function () {
 	var arr = [1, 2, 3, 4, 5];
 	proclaim.deepStrictEqual(arr.copyWithin(0, 3), [4, 5, 3, 4, 5]);
 	proclaim.deepStrictEqual(arr, [4, 5, 3, 4, 5]);
+});
+
+it('works with no args', function () {
+	proclaim.deepStrictEqual([1].copyWithin(), [1]);
+});
+
+it('works with 1 arg', function () {
+	proclaim.deepStrictEqual([1].copyWithin(0), [1]);
 });
 
 it('works with 2 args', function () {
@@ -65,4 +103,23 @@ it('should check inherited properties as well', function () {
 	proclaim.deepEqual(result[1], 'foo');
 	proclaim.deepEqual(result[2], 1);
 	proclaim.deepEqual(result.length, 3 );
+});
+
+it('throws if called with null context', function () {
+	proclaim.throws(function () {
+		return Array.prototype.copyWithin.call(null, 0);
+	}, TypeError);
+});
+
+it('throws if called with undefined context', function () {
+	proclaim.throws(function () {
+		return Array.prototype.copyWithin.call(undefined, 0);
+	}, TypeError);
+});
+
+var areSymbolsSupported = 'Symbol' in this && typeof this.Symbol === 'function';
+var ifSupportsUnscopableSymbol = areSymbolsSupported && 'unscopables' in this.Symbol ? it : xit;
+
+ifSupportsUnscopableSymbol('is unscopable', function () {
+	proclaim.ok('copyWithin' in Array.prototype[Symbol.unscopables], 'In Array#@@unscopables');
 });
