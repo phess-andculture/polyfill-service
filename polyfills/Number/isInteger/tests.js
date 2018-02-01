@@ -78,5 +78,7 @@ it('returns false for non integer values', function () {
 	proclaim.isFalse(Number.isInteger(null));
 	proclaim.isFalse(Number.isInteger({}));
 	proclaim.isFalse(Number.isInteger(function () {}));
-	proclaim.isFalse(Number.isInteger(Object.create(null)));
+	if ('create' in Object) {
+		proclaim.isFalse(Number.isInteger(Object.create(null)));
+	}
 });
