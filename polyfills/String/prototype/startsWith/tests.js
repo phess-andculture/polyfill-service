@@ -57,12 +57,20 @@ it('works as expected', function () {
 	proclaim.ok(!'abc'.startsWith('a', Infinity));
 	proclaim.ok('abc'.startsWith('b', true));
 	proclaim.ok('abc'.startsWith('a', 'x'));
-	proclaim.throws(function(){
-		String.prototype.startsWith.call(null, '.');
-	}, TypeError);
-	proclaim.throws(function(){
-		String.prototype.startsWith.call(undefined, '.');
-	}, TypeError);
+	var supportsStrictModeTests = (function () {
+		'use strict';
+
+		return this === undefined;
+	}).call(undefined);
+
+	if (supportsStrictModeTests) {
+		proclaim.throws(function () {
+			String.prototype.startsWith.call(null, '.');
+		}, TypeError);
+		proclaim.throws(function () {
+			String.prototype.startsWith.call(undefined, '.');
+		}, TypeError);
+	}
 	proclaim.throws(function(){
 		'/./'.startsWith(/./);
 	}, TypeError);
