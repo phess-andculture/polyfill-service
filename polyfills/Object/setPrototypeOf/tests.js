@@ -1,6 +1,49 @@
 /* eslint-env mocha, browser */
 /* global proclaim */
 
+it('is a function', function () {
+	proclaim.isFunction(Object.setPrototypeOf);
+});
+
+it('has correct argument length', function () {
+	proclaim.strictEqual(Object.setPrototypeOf.length, 2);
+});
+
+it('has correct name', function () {
+	var functionsHaveNames = (function foo() {}).name === 'foo';
+	if (functionsHaveNames) {
+		proclaim.equal(Object.setPrototypeOf.name, 'setPrototypeOf');
+	} else {
+		function nameOf(fn) {
+			return Function.prototype.toString.call(fn).match(/function\s*([^\s]*)\s*\(/)[1];
+		}
+		proclaim.equal(nameOf(Object.setPrototypeOf), 'setPrototypeOf');
+	}
+});
+
+var arePropertyDescriptorsSupported = function () {
+	var obj = {};
+	try {
+		Object.defineProperty(obj, 'x', {
+			enumerable: false,
+			value: obj
+		});
+		/* eslint-disable no-unused-vars, no-restricted-syntax */
+		for (var _ in obj) {
+			return false;
+		}
+		/* eslint-enable no-unused-vars, no-restricted-syntax */
+		return obj.x === obj;
+	} catch (e) { // this is IE 8.
+		return false;
+	}
+};
+var ifSupportsDescriptors = Object.defineProperty && arePropertyDescriptorsSupported() ? it : xit;
+
+ifSupportsDescriptors('property is not enumerable', function () {
+	proclaim.isFalse(Object.prototype.propertyIsEnumerable.call(Object.setPrototypeOf));
+});
+
 it('changes prototype to null objects', function() {
 	var obj = {a: 123};
 	proclaim.equal(obj instanceof Object, true);

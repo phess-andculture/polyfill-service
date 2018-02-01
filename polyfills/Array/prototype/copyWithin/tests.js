@@ -105,17 +105,25 @@ it('should check inherited properties as well', function () {
 	proclaim.deepEqual(result.length, 3 );
 });
 
-it('throws if called with null context', function () {
-	proclaim.throws(function () {
-		return Array.prototype.copyWithin.call(null, 0);
-	}, TypeError);
-});
+var supportsStrictModeTests = (function () {
+	'use strict';
 
-it('throws if called with undefined context', function () {
-	proclaim.throws(function () {
-		return Array.prototype.copyWithin.call(undefined, 0);
-	}, TypeError);
-});
+	return this === undefined;
+}).call(undefined);
+
+if (supportsStrictModeTests) {
+	it('throws if called with null context', function () {
+		proclaim.throws(function () {
+			return Array.prototype.copyWithin.call(null, 0);
+		}, TypeError);
+	});
+
+	it('throws if called with undefined context', function () {
+		proclaim.throws(function () {
+			return Array.prototype.copyWithin.call(undefined, 0);
+		}, TypeError);
+	});
+}
 
 var areSymbolsSupported = 'Symbol' in this && typeof this.Symbol === 'function';
 var ifSupportsUnscopableSymbol = areSymbolsSupported && 'unscopables' in this.Symbol ? it : xit;

@@ -28,9 +28,9 @@ ifSupportsDescriptors('property is not enumerable', function () {
 });
 
 it('1 is not equal to 1 + EPSILON', function () {
-	proclaim.notStrictEqual(1, 1 + EPSILON);
+	proclaim.notStrictEqual(1, 1 + Number.EPSILON);
 });
 
 it('1 is equal to 1 + EPSILON / 2', function () {
-	proclaim.strictEqual(1, 1 + EPSILON / 2);
+	proclaim.strictEqual(1, 1 + Number.EPSILON / 2);
 });

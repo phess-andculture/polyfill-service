@@ -1,12 +1,47 @@
-/* eslint-env mocha, browser*/
-/* global proclaim, it */
+/* eslint-env mocha, browser */
+/* global proclaim */
 
-it('has correct instance', function () {
-	proclaim.isInstanceOf(Number.isSafeInteger, Function);
+it('is a function', function () {
+	proclaim.isFunction(Number.isSafeInteger);
 });
 
 it('has correct argument length', function () {
-	proclaim.equal(Number.isSafeInteger.length, 1);
+	proclaim.strictEqual(Number.isSafeInteger.length, 1);
+});
+
+it('has correct name', function () {
+	var functionsHaveNames = (function foo() {}).name === 'foo';
+	if (functionsHaveNames) {
+		proclaim.equal(Number.isSafeInteger.name, 'isSafeInteger');
+	} else {
+		function nameOf(fn) {
+			return Function.prototype.toString.call(fn).match(/function\s*([^\s]*)\s*\(/)[1];
+		}
+		proclaim.equal(nameOf(Number.isSafeInteger), 'isSafeInteger');
+	}
+});
+
+var arePropertyDescriptorsSupported = function () {
+	var obj = {};
+	try {
+		Object.defineProperty(obj, 'x', {
+			enumerable: false,
+			value: obj
+		});
+		/* eslint-disable no-unused-vars, no-restricted-syntax */
+		for (var _ in obj) {
+			return false;
+		}
+		/* eslint-enable no-unused-vars, no-restricted-syntax */
+		return obj.x === obj;
+	} catch (e) { // this is IE 8.
+		return false;
+	}
+};
+var ifSupportsDescriptors = Object.defineProperty && arePropertyDescriptorsSupported() ? it : xit;
+
+ifSupportsDescriptors('property is not enumerable', function () {
+	proclaim.isFalse(Object.prototype.propertyIsEnumerable.call(Number.isSafeInteger));
 });
 
 it('returns false if argument is not a number literal', function () {

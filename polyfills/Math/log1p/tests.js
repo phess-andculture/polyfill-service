@@ -75,9 +75,8 @@ it('works as expected when called with positive integers', function () {
 });
 
 it('works as expected when called with positive real numbers', function () {
-	proclaim.strictEqual(Math.log1p(0.1), -1);
-	proclaim.strictEqual(Math.log1p(0.5), -0.3010299956639812);
-	proclaim.strictEqual(Math.log1p(1.5), 0.17609125905568124);
+	proclaim.strictEqual(Math.log1p(0.5), 0.4054651081081644);
+	proclaim.strictEqual(Math.log1p(1.5), 0.9162907318741551);
 });
 
 it('works as expected when called with negative integers', function () {

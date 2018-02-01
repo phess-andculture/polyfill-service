@@ -40,7 +40,7 @@ ifSupportsDescriptors('property is not enumerable', function () {
 });
 
 it('works as expected when called with no arguments', function () {
-	proclaim.strictEqual(Math.sinh(), NaN);
+	proclaim.isTrue(isNaN(Math.sinh()));
 });
 
 it('works as expected when called with undefined', function () {

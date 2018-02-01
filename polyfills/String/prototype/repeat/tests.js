@@ -1,12 +1,47 @@
 /* eslint-env mocha, browser */
 /* global proclaim */
 
-it('has correct instance', function () {
-	proclaim.isInstanceOf(String.prototype.repeat, Function);
+it('is a function', function () {
+	proclaim.isFunction(String.prototype.repeat);
 });
 
 it('has correct argument length', function () {
-	proclaim.equal(String.prototype.repeat.length, 1);
+	proclaim.strictEqual(String.prototype.repeat.length, 0);
+});
+
+it('has correct name', function () {
+	var functionsHaveNames = (function foo() {}).name === 'foo';
+	if (functionsHaveNames) {
+		proclaim.equal(String.prototype.repeat.name, 'repeat');
+	} else {
+		function nameOf(fn) {
+			return Function.prototype.toString.call(fn).match(/function\s*([^\s]*)\s*\(/)[1];
+		}
+		proclaim.equal(nameOf(String.prototype.repeat), 'repeat');
+	}
+});
+
+var arePropertyDescriptorsSupported = function () {
+	var obj = {};
+	try {
+		Object.defineProperty(obj, 'x', {
+			enumerable: false,
+			value: obj
+		});
+		/* eslint-disable no-unused-vars, no-restricted-syntax */
+		for (var _ in obj) {
+			return false;
+		}
+		/* eslint-enable no-unused-vars, no-restricted-syntax */
+		return obj.x === obj;
+	} catch (e) { // this is IE 8.
+		return false;
+	}
+};
+var ifSupportsDescriptors = Object.defineProperty && arePropertyDescriptorsSupported() ? it : xit;
+
+ifSupportsDescriptors('property is not enumerable', function () {
+	proclaim.isFalse(Object.prototype.propertyIsEnumerable.call(String.prototype.repeat));
 });
 
 // excellent tests provided by https://github.com/mathiasbynens/String.prototype.repeat
@@ -29,15 +64,15 @@ it('works with strings', function () {
 it('throws invalid counts', function () {
 	proclaim.throws(function () {
 		'abc'.repeat(-Infinity);
-	});
+	}, RangeError);
 
 	proclaim.throws(function () {
 		'abc'.repeat(-1);
-	});
+	}, RangeError);
 
 	proclaim.throws(function() {
 		'abc'.repeat(+Infinity);
-	});
+	}, RangeError);
 });
 
 it('works with coercible objects', function () {
