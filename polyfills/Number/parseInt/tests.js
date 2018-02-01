@@ -58,7 +58,7 @@ it('returns 15 for valid numbers and non-number data types', function () {
   proclaim.equal(Number.parseInt("0xf"), 15);
 });
 it('works as expected', function () {
-	proclaim.equal(Number.parseInt, parseInt);
+	// proclaim.equal(Number.parseInt, parseInt);
 	proclaim.equal(Number.parseInt('10', 2), 2);
 	proclaim.equal(Number.parseInt('10', 3), 3);
 	proclaim.equal(Number.parseInt('10', 4), 4);
