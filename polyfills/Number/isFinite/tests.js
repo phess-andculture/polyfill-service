@@ -66,7 +66,9 @@ it('retuns false for infinite values', function () {
 	proclaim.isFalse(Number.isFinite(Infinity));
 	proclaim.isFalse(Number.isFinite(-Infinity));
 	proclaim.isFalse(Number.isFinite(NaN));
-	proclaim.isFalse(Number.isFinite(Object.create(null)));
+	if ('create' in Object) {
+		proclaim.isFalse(Number.isFinite(Object.create(null)));
+	}
 	proclaim.isFalse(Number.isFinite(function () {}));
 	proclaim.isFalse(Number.isFinite({}));
 	proclaim.isFalse(Number.isFinite(new Number(0.1)));
