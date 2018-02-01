@@ -117,6 +117,6 @@ it('works as expected', function () {
 	proclaim.equal(Number.parseInt('+0xF'), 15);
 	proclaim.equal(Number.parseInt('+0xF', 16), 15);
 	proclaim.equal(Number.parseInt('10', -4294967294), 2);
-	proclaim.equal(Number.parseInt(null), NaN);
-	proclaim.equal(Number.parseInt(void 8), NaN);
+	proclaim.isTrue(isNaN(Number.parseInt(null)));
+	proclaim.isTrue(isNaN(Number.parseInt(void 8)));
 });

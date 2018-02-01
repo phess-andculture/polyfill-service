@@ -37,7 +37,7 @@
 		return target;
 	};
 	// used as fallback when no promotion is possible
-	var createAndCopy = function (origin, proto) {
+	var createAndCopy = function setPrototypeOf(origin, proto) {
 		return copyDescriptors(create(proto), origin);
 	};
 	var set, setPrototypeOf;
@@ -67,7 +67,7 @@
 			// if null objects are buggy
 			// nodejs 0.8 to 0.10
 			if (set instanceof Object) {
-				setPrototypeOf = function (origin, proto) {
+				setPrototypeOf = function setPrototypeOf(origin, proto) {
 					// use such bug to promote
 					/* eslint-disable no-proto */
 					origin.__proto__ = proto;
@@ -77,7 +77,7 @@
 			} else {
 				// try to use proto or fallback
 				// Safari, old Firefox, many others
-				setPrototypeOf = function (origin, proto) {
+				setPrototypeOf = function setPrototypeOf(origin, proto) {
 					// if proto is not null
 					if (getPrototypeOf(origin)) {
 						// use __proto__ to promote

@@ -77,5 +77,7 @@ it('retuns false for valid numbers and non-number data types', function () {
 	proclaim.isFalse(Number.isNaN(new Number(0.1)));
 	proclaim.isFalse(Number.isNaN(null));
 	proclaim.isFalse(Number.isNaN(function () {}));
-	proclaim.isFalse(Number.isNaN(Object.create(null)));
+	if ('create' in Object) {
+		proclaim.isFalse(Number.isNaN(Object.create(null)));
+	}
 });

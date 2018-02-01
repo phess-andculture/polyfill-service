@@ -1,5 +1,5 @@
 // 20.1.2.4. Number.isNaN ( number )
-CreateMethodProperty(Number, 'isNaN', function (number) {
+CreateMethodProperty(Number, 'isNaN', function isNaN(number) {
 	// 1. If Type(number) is not Number, return false.
 	if (Type(number) !== 'number') {
 		return false;

@@ -6,7 +6,7 @@ it('is a function', function () {
 });
 
 it('has correct argument length', function () {
-	proclaim.strictEqual(String.prototype.repeat.length, 0);
+	proclaim.strictEqual(String.prototype.repeat.length, 1);
 });
 
 it('has correct name', function () {
