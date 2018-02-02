@@ -59,7 +59,7 @@ it('returns 15 for valid numbers and non-number data types', function () {
 });
 
 it('works as expected', function () {
-	proclaim.equal(Number.parseFloat, window.parseFloat);
+	// proclaim.equal(Number.parseFloat, parseFloat);
 	proclaim.equal(Number.parseFloat('0'), 0);
 	proclaim.equal(Number.parseFloat(' 0'), 0);
 	proclaim.equal(Number.parseFloat('+0'), 0);
