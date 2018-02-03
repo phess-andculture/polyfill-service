@@ -1,5 +1,43 @@
-/* eslint-env mocha, browser */
-/* global proclaim */
+/* eslint-env mocha, browser*/
+/* global proclaim, it */
+
+it('is a function', function () {
+	proclaim.isFunction(Object.defineProperty);
+});
+
+it('has correct argument length', function () {
+	proclaim.strictEqual(Object.defineProperty.length, 2);
+});
+
+it('has correct name', function() {
+	var functionsHaveNames = (function foo() {}).name === 'foo';
+	if (functionsHaveNames) {
+		proclaim.equal(Object.defineProperty.name, 'defineProperty');
+	} else {
+		function nameOf(fn) {
+			return Function.prototype.toString.call(fn).match(/function\s*([^\s]*)\s*\(/)[1];
+		}
+		proclaim.equal(nameOf(Object.defineProperty), 'defineProperty');
+	}
+});
+
+var arePropertyDescriptorsSupported = function () {
+	var obj = {};
+	try {
+		Object.defineProperty(obj, 'x', { enumerable: false, value: obj });
+        /* eslint-disable no-unused-vars, no-restricted-syntax */
+        for (var _ in obj) { return false; }
+        /* eslint-enable no-unused-vars, no-restricted-syntax */
+		return obj.x === obj;
+	} catch (e) { // this is IE 8.
+		return false;
+	}
+};
+var ifSupportsDescriptors = Object.defineProperty && arePropertyDescriptorsSupported() ? it : xit;
+
+ifSupportsDescriptors('property is not enumerable', function () {
+	proclaim.isFalse(Object.prototype.propertyIsEnumerable.call(Object.defineProperty));
+});
 
 describe('Basic functionality', function () {
 	var
