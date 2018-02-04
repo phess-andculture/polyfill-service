@@ -101,7 +101,6 @@ it('works as expected', function () {
 	}
 });
 
-
 // Copied from ES5-Shim
 
 describe('Basic functionality', function () {
