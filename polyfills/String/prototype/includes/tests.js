@@ -45,7 +45,13 @@ it('works as expected', function(){
     proclaim.ok('aundefinedb'.includes());
     proclaim.ok('abcd'.includes('b', 1));
     proclaim.ok(!'abcd'.includes('b', 2));
-    if (STRICT) {
+    var supportsStrictModeTests = (function () {
+			'use strict';
+
+			return this === undefined;
+		}).call(undefined);
+
+		if (supportsStrictModeTests) {
       proclaim.throws(function(){
         String.prototype.includes.call(null, '.');
       }, TypeError);
