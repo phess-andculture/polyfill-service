@@ -5,7 +5,7 @@ proclaim.arity = function (fn, expected) {
 	proclaim.isFunction(fn);
 	proclaim.strictEqual(fn.length, expected);
 };
-name = function (fn, expected) {
+function name (fn, expected) {
 	var functionsHaveNames = (function foo() { }).name === 'foo';
 	if (functionsHaveNames) {
 		proclaim.strictEqual(fn.name, expected);
