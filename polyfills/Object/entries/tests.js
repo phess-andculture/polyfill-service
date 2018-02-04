@@ -1,5 +1,77 @@
-/* eslint-env mocha, browser */
-/* global proclaim */
+/* eslint-env mocha */
+/* globals proclaim */
+
+proclaim.arity = function (fn, expected) {
+	this.isFunction(fn);
+	this.strictEqual(fn.length, expected);
+};
+proclaim.name = function (fn, expected) {
+	var functionsHaveNames = (function foo() { }).name === 'foo';
+	if (functionsHaveNames) {
+		this.strictEqual(fn.name, expected);
+	} else {
+		this.equal(Function.prototype.toString.call(fn).match(/function\s*([^\s]*)\s*\(/)[1], expected);
+	}
+};
+proclaim.nonEnumerable = function (obj, prop) {
+	var arePropertyDescriptorsSupported = function () {
+		var obj = {};
+		try {
+			Object.defineProperty(obj, 'x', { enumerable: false, value: obj });
+					/* eslint-disable no-unused-vars, no-restricted-syntax */
+					for (var _ in obj) { return false; }
+					/* eslint-enable no-unused-vars, no-restricted-syntax */
+			return obj.x === obj;
+		} catch (e) { // this is IE 8.
+			return false;
+		}
+	};
+	if (Object.defineProperty && arePropertyDescriptorsSupported()) {
+		this.isFalse(Object.prototype.propertyIsEnumerable.call(obj[prop]));
+	}
+};
+it('is a function', function () {
+	proclaim.isFunction(Object.entries);
+});
+
+it('has correct arity', function () {
+	proclaim.arity(Object.entries.length, 1);
+});
+
+it('has correct name', function() {
+	proclaim.name(Object.entries, 'entries');
+});
+
+it('is not enumerable', function () {
+	proclaim.nonEnumerable(Object, 'entries');
+});
+
+it('works as expected', function () {
+	proclaim.deepEqual(Object.entries({
+		q: 1,
+		w: 2,
+		e: 3
+	}), [['q', 1], ['w', 2], ['e', 3]]);
+	proclaim.deepEqual(Object.entries(new String('qwe')), [['0', 'q'], ['1', 'w'], ['2', 'e']]);
+	if ('assign' in Object && 'create' in Object) {
+		proclaim.deepEqual(Object.entries(Object.assign(Object.create({
+			q: 1,
+			w: 2,
+			e: 3
+		}), {
+				a: 4,
+				s: 5,
+				d: 6
+			})), [['a', 4], ['s', 5], ['d', 6]]);
+	}
+	try {
+		proclaim.deepEqual(Function('return Object.entries({a: 1, get b(){delete this.c;return 2},c: 3})')(), [['a', 1], ['b', 2]]);
+	} catch (e$) { }
+	try {
+		proclaim.deepEqual(Function('return Object.entries({a: 1, get b(){Object.defineProperty(this, "c", {value:4,enumerable:false});return 2},c: 3})')(), [['a', 1], ['b', 2]]);
+	} catch (e$) { }
+});
+
 
 // Modified version of the test262 tests located at
 // https://github.com/tc39/test262/tree/master/test/built-ins/Object/entries
