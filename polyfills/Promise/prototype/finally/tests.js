@@ -1,33 +1,102 @@
 /* eslint-env mocha */
 /* globals proclaim */
 
+proclaim.arity = function (fn, expected) {
+	this.isFunction(fn);
+	this.strictEqual(fn.length, expected);
+};
+proclaim.name = function (fn, expected) {
+	var functionsHaveNames = (function foo() { }).name === 'foo';
+	if (functionsHaveNames) {
+		this.strictEqual(fn.name, expected);
+	} else {
+		this.equal(Function.prototype.toString.call(fn).match(/function\s*([^\s]*)\s*\(/)[1], expected);
+	}
+};
+proclaim.nonEnumerable = function (obj, prop) {
+	var arePropertyDescriptorsSupported = function () {
+		var obj = {};
+		try {
+			Object.defineProperty(obj, 'x', { enumerable: false, value: obj });
+					/* eslint-disable no-unused-vars, no-restricted-syntax */
+					for (var _ in obj) { return false; }
+					/* eslint-enable no-unused-vars, no-restricted-syntax */
+			return obj.x === obj;
+		} catch (e) { // this is IE 8.
+			return false;
+		}
+	};
+	if (Object.defineProperty && arePropertyDescriptorsSupported()) {
+		this.isFalse(Object.prototype.propertyIsEnumerable.call(obj[prop]));
+	}
+};
+it('is a function', function () {
+	proclaim.isFunction(Promise.prototype['finally']);
+});
+
+it('has correct arity', function () {
+	proclaim.arity(Promise.prototype['finally'].length, 1);
+});
+
+it('has correct name', function() {
+	proclaim.name(Promise.prototype['finally'], 'finally');
+});
+
+it('is not enumerable', function () {
+	proclaim.nonEnumerable(Promise.prototype, 'finally');
+});
+
 describe('finally', function () {
 	it("does not take any arguments", function () {
-			return Promise.resolve("ok")['finally'](function (val) {
-				proclaim.equal(val, undefined);
-			});
+		return Promise.resolve("ok")['finally'](function (val) {
+			proclaim.equal(val, undefined);
+		});
 	});
 
 	it("can throw errors and be caught", function () {
-			return Promise.resolve("ok")['finally'](function () {
-					throw "error";
-			})['catch'](function (e) {
-					proclaim.equal(e, 'error');
-			});
+		return Promise.resolve("ok")['finally'](function () {
+			throw "error";
+		})['catch'](function (e) {
+			proclaim.equal(e, 'error');
+		});
 	});
 
 	it("resolves with resolution value if finally method doesn't throw", function () {
-			return Promise.resolve("ok")['finally'](function () {
-			}).then(function(val) {
-				proclaim.equal(val, 'ok');
-			});
+		return Promise.resolve("ok")['finally'](function () {
+		}).then(function (val) {
+			proclaim.equal(val, 'ok');
+		});
 	});
 
 	it("rejects with rejection value if finally method doesn't throw", function () {
-			return Promise.reject("error")['finally'](function () {
-			})['catch'](function(val) {
-				proclaim.equal(val, 'error');
-			});
+		return Promise.reject("error")['finally'](function () {
+		})['catch'](function (val) {
+			proclaim.equal(val, 'error');
+		});
+	});
+
+	it('Promise#finally, resolved', function () {
+		var called = 0;
+		var arg = void 8;
+		return Promise.resolve(42)['finally'](function (it) {
+			called++;
+			arg = it;
+		}).then(function (it) {
+			proclaim.strictEqual(it, 42, 'resolved with a correct value');
+			proclaim.strictEqual(called, 1, 'onFinally function called one time');
+			proclaim.strictEqual(arg, void 8, 'onFinally function called with a correct argument');
+		});
+	});
+	it('Promise#finally, rejected', function () {
+		var called = 0;
+		var arg = void 8;
+		return Promise.reject(42)['finally'](function (it) {
+			called++;
+			arg = it;
+		})['catch'](function () {
+			proclaim.strictEqual(called, 1, 'onFinally function called one time');
+			proclaim.strictEqual(arg, void 8, 'onFinally function called with a correct argument');
+		});
 	});
 });
 
