@@ -49,7 +49,7 @@ it('is a function', function () {
 });
 
 it('has correct arity', function () {
-	proclaim.arity(Object.getOwnPropertyDescriptors.length, 1);
+	proclaim.arity(Object.getOwnPropertyDescriptors, 2);
 });
 
 it('has correct name', function() {

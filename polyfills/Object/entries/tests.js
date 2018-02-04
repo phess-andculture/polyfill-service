@@ -35,7 +35,7 @@ it('is a function', function () {
 });
 
 it('has correct arity', function () {
-	proclaim.arity(Object.entries.length, 1);
+	proclaim.arity(Object.entries, 1);
 });
 
 it('has correct name', function() {
@@ -107,22 +107,6 @@ var objectKeysWorksWithPrimitives = (function() {
 		return false;
 	}
 }());
-
-it('should have name `entries`', function() {
-	var functionsHaveNames = (function foo() {}).name === 'foo';
-	if (functionsHaveNames) {
-		proclaim.equal(Object.entries.name, 'entries');
-	} else {
-		function nameOf(fn) {
-			return Function.prototype.toString.call(fn).match(/function\s*([^\s]*)\s*\(/)[1];
-		}
-		proclaim.equal(nameOf(Object.entries), 'entries');
-	}
-});
-
-it('has length `1`', function() {
-	proclaim.equal(Object.entries.length, 1);
-});
 
 if (supportsDescriptors) {
 	it('should terminate if getting a value throws an exception', function () {

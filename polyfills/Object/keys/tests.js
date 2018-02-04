@@ -45,15 +45,15 @@ var propertyDescriptorsSupported = (function () {
 }());
 
 it('is a function', function () {
-	proclaim.isFunction(Object.getOwnPropertyDescriptors);
+	proclaim.isFunction(Object.keys);
 });
 
 it('has correct arity', function () {
-	proclaim.arity(Object.getOwnPropertyDescriptors.length, 1);
+	proclaim.arity(Object.keys, 1);
 });
 
 it('has correct name', function() {
-	proclaim.name(Object.getOwnPropertyDescriptors, 'getOwnPropertyDescriptors');
+	proclaim.name(Object.keys, 'keys');
 });
 
 it('is not enumerable', function () {

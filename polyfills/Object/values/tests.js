@@ -35,11 +35,11 @@ it('is a function', function () {
 });
 
 it('has correct arity', function () {
-	proclaim.arity(Object.values.length, 1);
+	proclaim.arity(Object.values, 1);
 });
 
 it('has correct name', function() {
-	proclaim.name(Object.values.name, 'values');
+	proclaim.name(Object.values, 'values');
 });
 
 it('is not enumerable', function () {
