@@ -6,7 +6,7 @@ it('is a function', function () {
 });
 
 it('has correct argument length', function () {
-	proclaim.strictEqual(Object.defineProperty.length, 2);
+	proclaim.strictEqual(Object.defineProperty.length, 3);
 });
 
 it('has correct name', function() {

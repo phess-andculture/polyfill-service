@@ -45,15 +45,15 @@ var propertyDescriptorsSupported = (function () {
 }());
 
 it('is a function', function () {
-	proclaim.isFunction(Object.getOwnPropertyDescriptors);
+	proclaim.isFunction(Object.getOwnPropertyDescriptor);
 });
 
 it('has correct arity', function () {
-	proclaim.arity(Object.getOwnPropertyDescriptors, 2);
+	proclaim.arity(Object.getOwnPropertyDescriptor, 2);
 });
 
 it('has correct name', function() {
-	proclaim.name(Object.getOwnPropertyDescriptors, 'getOwnPropertyDescriptors');
+	proclaim.name(Object.getOwnPropertyDescriptor, 'getOwnPropertyDescriptor');
 });
 
 it('is not enumerable', function () {
@@ -61,8 +61,8 @@ it('is not enumerable', function () {
 });
 
 it('works as expected', function () {
-	var getOwnPropertyDescriptors, O, s, descs;
-	getOwnPropertyDescriptors = Object.getOwnPropertyDescriptors;
+	var getOwnPropertyDescriptor, O, s, descs;
+	getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
 	if ('create' in Object) {
 		O = Object.create({
 			q: 1
@@ -74,7 +74,7 @@ it('works as expected', function () {
 		O.w = 2;
 		s = Symbol('s');
 		O[s] = 4;
-		descs = getOwnPropertyDescriptors(O);
+		descs = getOwnPropertyDescriptor(O);
 		proclaim.strictEqual(descs.q, void 8);
 		proclaim.deepEqual(descs.w, {
 			enumerable: true,

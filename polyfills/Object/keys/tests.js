@@ -31,19 +31,6 @@ proclaim.nonEnumerable = function (obj, prop) {
 	}
 };
 
-var propertyDescriptorsSupported = (function () {
-	var obj = {};
-	try {
-		Object.defineProperty(obj, 'x', { enumerable: false, value: obj });
-        /* eslint-disable no-unused-vars, no-restricted-syntax */
-        for (var _ in obj) { return false; }
-        /* eslint-enable no-unused-vars, no-restricted-syntax */
-		return obj.x === obj;
-	} catch (e) { // this is IE 8.
-		return false;
-	}
-}());
-
 it('is a function', function () {
 	proclaim.isFunction(Object.keys);
 });
@@ -57,7 +44,7 @@ it('has correct name', function() {
 });
 
 it('is not enumerable', function () {
-	proclaim.nonEnumerable(Object, 'entries');
+	proclaim.nonEnumerable(Object, 'keys');
 });
 
 it('works as expected', function () {
