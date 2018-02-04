@@ -2,15 +2,15 @@
 /* global proclaim, it */
 
 proclaim.arity = function (fn, expected) {
-	proclaim.isFunction(fn);
-	proclaim.strictEqual(fn.length, expected);
+	this.isFunction(fn);
+	this.strictEqual(fn.length, expected);
 };
 proclaim.name = function (fn, expected) {
 	var functionsHaveNames = (function foo() { }).name === 'foo';
 	if (functionsHaveNames) {
-		proclaim.strictEqual(fn.name, expected);
+		this.strictEqual(fn.name, expected);
 	} else {
-		proclaim.equal(Function.prototype.toString.call(fn).match(/function\s*([^\s]*)\s*\(/)[1], expected);
+		this.equal(Function.prototype.toString.call(fn).match(/function\s*([^\s]*)\s*\(/)[1], expected);
 	}
 };
 proclaim.nonEnumerable = function (obj, prop) {
@@ -27,7 +27,7 @@ proclaim.nonEnumerable = function (obj, prop) {
 		}
 	};
 	if (Object.defineProperty && arePropertyDescriptorsSupported()) {
-		proclaim.isFalse(Object.prototype.propertyIsEnumerable.call(obj[prop]));
+		this.isFalse(Object.prototype.propertyIsEnumerable.call(obj[prop]));
 	}
 };
 it('is a function', function () {
