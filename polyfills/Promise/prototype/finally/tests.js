@@ -35,7 +35,7 @@ it('is a function', function () {
 });
 
 it('has correct arity', function () {
-	proclaim.arity(Promise.prototype['finally'].length, 1);
+	proclaim.arity(Promise.prototype['finally'].length, 2);
 });
 
 it('has correct name', function() {
