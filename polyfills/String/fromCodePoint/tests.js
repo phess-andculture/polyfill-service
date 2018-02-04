@@ -40,7 +40,10 @@ ifSupportsDescriptors('property is not enumerable', function () {
 });
 
 it('works as expected', function () {
-	var fromCodePoint, tmp, counter, result;
+	var fromCodePoint;
+	var tmp;
+	// var counter;
+	// var result;
 	fromCodePoint = String.fromCodePoint;
 	proclaim.strictEqual(fromCodePoint(''), '\0');
 	proclaim.strictEqual(fromCodePoint(), '');
@@ -97,16 +100,16 @@ it('works as expected', function () {
 		}
 	}), 'a');
 	proclaim.strictEqual(tmp, 0x61);
-	counter = Math.pow(2, 15) * 3 / 2;
-	result = [];
-	while (--counter >= 0) {
-		result.push(0);
-	}
-	fromCodePoint.apply(null, result);
-	counter = Math.pow(2, 15) * 3 / 2;
-	result = [];
-	while (--counter >= 0) {
-		result.push(0xFFFF + 1);
-	}
-	fromCodePoint.apply(null, result);
+	// counter = Math.pow(2, 15) * 3 / 2;
+	// result = [];
+	// while (--counter >= 0) {
+	// 	result.push(0);
+	// }
+	// fromCodePoint.apply(null, result);
+	// counter = Math.pow(2, 15) * 3 / 2;
+	// result = [];
+	// while (--counter >= 0) {
+	// 	result.push(0xFFFF + 1);
+	// }
+	// fromCodePoint.apply(null, result);
 });
