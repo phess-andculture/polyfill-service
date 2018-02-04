@@ -2,22 +2,22 @@
 /* global proclaim, it */
 
 it('is a function', function () {
-	proclaim.isFunction(Object.assign);
+	proclaim.isFunction(String.prototype.includes);
 });
 
 it('has correct argument length', function () {
-	proclaim.strictEqual(Object.assign.length, 2);
+	proclaim.strictEqual(String.prototype.includes.length, 1);
 });
 
 it('has correct name', function() {
 	var functionsHaveNames = (function foo() {}).name === 'foo';
 	if (functionsHaveNames) {
-		proclaim.equal(Object.assign.name, 'assign');
+		proclaim.equal(String.prototype.includes.name, 'includes');
 	} else {
 		function nameOf(fn) {
 			return Function.prototype.toString.call(fn).match(/function\s*([^\s]*)\s*\(/)[1];
 		}
-		proclaim.equal(nameOf(Object.assign), 'assign');
+		proclaim.equal(nameOf(String.prototype.includes), 'includes');
 	}
 });
 
@@ -36,7 +36,7 @@ var arePropertyDescriptorsSupported = function () {
 var ifSupportsDescriptors = Object.defineProperty && arePropertyDescriptorsSupported() ? it : xit;
 
 ifSupportsDescriptors('property is not enumerable', function () {
-	proclaim.isFalse(Object.prototype.propertyIsEnumerable.call(Object.assign));
+	proclaim.isFalse(Object.prototype.propertyIsEnumerable.call(String.prototype.includes));
 });
 
 it('works as expected', function(){
