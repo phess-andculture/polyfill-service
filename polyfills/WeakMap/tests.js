@@ -1,6 +1,74 @@
 /* eslint-env mocha, browser */
 /* global proclaim */
 
+proclaim.arity = function (fn, expected) {
+	proclaim.isFunction(fn);
+	proclaim.strictEqual(fn.length, expected);
+};
+function name (fn, expected) {
+	var functionsHaveNames = (function foo() { }).name === 'foo';
+	if (functionsHaveNames) {
+		proclaim.strictEqual(fn.name, expected);
+	} else {
+		proclaim.equal(Function.prototype.toString.call(fn).match(/function\s*([^\s]*)\s*\(/)[1], expected);
+	}
+};
+proclaim.nonEnumerable = function (obj, prop) {
+	var arePropertyDescriptorsSupported = function () {
+		var obj = {};
+		try {
+			Object.defineProperty(obj, 'x', { enumerable: false, value: obj });
+			/* eslint-disable no-unused-vars, no-restricted-syntax */
+			for (var _ in obj) { return false; }
+			/* eslint-enable no-unused-vars, no-restricted-syntax */
+			return obj.x === obj;
+		} catch (e) { // this is IE 8.
+			return false;
+		}
+	};
+	if (Object.defineProperty && arePropertyDescriptorsSupported()) {
+		proclaim.isFalse(Object.prototype.propertyIsEnumerable.call(obj[prop]));
+	}
+};
+
+it('is a function', function () {
+	proclaim.isFunction(WeakMap);
+});
+
+it('has correct argument length', function () {
+	proclaim.strictEqual(WeakMap.length, 1);
+});
+
+it('has correct name', function() {
+	var functionsHaveNames = (function foo() {}).name === 'foo';
+	if (functionsHaveNames) {
+		proclaim.equal(WeakMap.name, 'WeakMap');
+	} else {
+		function nameOf(fn) {
+			return Function.prototype.toString.call(fn).match(/function\s*([^\s]*)\s*\(/)[1];
+		}
+		proclaim.equal(nameOf(WeakMap), 'WeakMap');
+	}
+});
+
+var arePropertyDescriptorsSupported = function () {
+	var obj = {};
+	try {
+		Object.defineProperty(obj, 'x', { enumerable: false, value: obj });
+        /* eslint-disable no-unused-vars, no-restricted-syntax */
+        for (var _ in obj) { return false; }
+        /* eslint-enable no-unused-vars, no-restricted-syntax */
+		return obj.x === obj;
+	} catch (e) { // this is IE 8.
+		return false;
+	}
+};
+var ifSupportsDescriptors = Object.defineProperty && arePropertyDescriptorsSupported() ? it : xit;
+
+ifSupportsDescriptors('property is not enumerable', function () {
+	proclaim.isFalse(Object.prototype.propertyIsEnumerable.call(window, WeakMap));
+});
+
 it("has valid constructor", function () {
 	proclaim.isInstanceOf(new WeakMap, WeakMap);
 	proclaim.isInstanceOf(new WeakMap(), WeakMap);
@@ -10,13 +78,20 @@ it("has valid constructor", function () {
 		proclaim.equal((new WeakMap).__proto__.isPrototypeOf(new WeakMap()), true);
 		proclaim.equal((new WeakMap).__proto__ === WeakMap.prototype, true);
 	}
+
+	proclaim.throws(function () {
+		WeakMap();
+	}, TypeError);
 });
 
 it('has get, set, delete, and has functions', function() {
-	proclaim.notEqual(WeakMap.prototype['get'], undefined);
-	proclaim.notEqual(WeakMap.prototype['set'], undefined);
-	proclaim.notEqual(WeakMap.prototype['delete'], undefined);
-	proclaim.notEqual(WeakMap.prototype['has'], undefined);
+	proclaim.isFunction(WeakMap.prototype['get']);
+	proclaim.isFunction(WeakMap.prototype['set']);
+	proclaim.isFunction(WeakMap.prototype['delete']);
+	proclaim.isFunction(WeakMap.prototype['has']);
+});
+it('does not have clear function', function () {
+	proclaim.isUndefined(WeakMap.prototype.clear);
 });
 it('should perform as expected', function() {
 	var wm = new WeakMap();
@@ -56,15 +131,6 @@ it('should be chainable', function() {
 	proclaim.equal(wm.get(o2), 'aoeui');
 });
 
-// IE <= 8 does not allow invocation of delete as a property of an object using dot notation
-it.skip('should allow use of dot notation for delete method', function() {
-	var wm = new WeakMap();
-	var o1 = {};
-	wm.set(o1, 37);
-	//wm.delete(o1);  // Causes an error during parse in IE<=8, which will prevent other tests from running even though this test is marked as skipped!
-	proclaim.equal(wm.has(o1), false);
-});
-
 // Ealy native implementations do not support this, polyfill does
 it('should be possible to prepopulate the map', function() {
 	var o1 = {};
@@ -77,3 +143,141 @@ it('should be possible to prepopulate the map', function() {
 	proclaim.equal(wm.get(window), undefined);
 	proclaim.equal(wm.get(o1), 12);
 });
+
+if ('freeze' in Object) {
+	it('supports frozen objects', function () {
+		var f = f = Object.freeze({});
+		var map = new WeakMap();
+		map.set(f, 42);
+		proclaim.isTrue(M.has(f));
+		proclaim.strictEqual(map.get(f), 42);
+		M['delete'](f);
+    proclaim.strictEqual(M.has(f), false);
+    proclaim.strictEqual(M.get(f), void 8);
+	});
+}
+
+if ('Symbol' in window && 'iterator' in Symbol && typeof [][Symbol.iterator] === 'function') {
+	it('supports iterables', function () {
+		var a = [];
+		var done = false;
+		a[Symbol.iterator] = function () {
+			done = true;
+			return [][Symbol.iterator].call(this);
+		};
+		new WeakMap(a);
+		proclaim.isTrue(done);
+	});
+}
+
+ifSupportsDescriptors('does not add anything enumerable into the Object prototype', function () {
+	var o = {};
+	new WeakMap().set(o, 1);
+	var results = [];
+	for (var key in o) {
+		results.push(key);
+	}
+	proclaim.deepEqual(results, []);
+	if ('keys' in Object) {
+		proclaim.deepEqual(Object.keys(o), []);
+	}
+	if ('getOwnPropertyNames' in Object) {
+		proclaim.deepEqual(Object.getOwnPropertyNames(o), []);
+	}
+	if ('getOwnPropertySymbols' in Object) {
+		proclaim.deepEqual(Object.getOwnPropertySymbols(o), []);
+	}
+	if (typeof Reflect !== 'undefined' && 'ownKeys' in Reflect) {
+		proclaim.deepEqual(Reflect.ownKeys(o), []);
+	}
+});
+
+// TODO:
+// ifSupportsSubclassing('subclassing works', function () {
+// 	var C = nativeSubclass(WeakMap);
+// 	proclaim.isInstanceOf(new C, C);
+// 	proclaim.isInstanceOf(new C, WeakMap);
+// 	var O = {};
+// 	var c = new C();
+// 	c.set(O, 2);
+// 	proclaim.deepEqual(c.get(O), 2);
+// });
+
+// Generated by LiveScript 1.4.0
+  it('WeakMap#delete', function(proclaim){
+    var x$, M, a, b;
+    // name(WeakMap.prototype['delete'], 'delete');
+    proclaim.arity(WeakMap.prototype['delete'], 1);
+    proclaim.nonEnumerable(WeakMap.prototype, 'delete');
+    x$ = M = new WeakMap();
+    x$.set(a = {}, 42);
+    x$.set(b = {}, 21);
+    proclaim.ok(M.has(a) && M.has(b), 'WeakMap has values before .delete()');
+    M['delete'](a);
+    proclaim.ok(!M.has(a) && M.has(b), 'WeakMap hasn`t value after .delete()');
+    proclaim.ok((function(){
+      try {
+        return !M['delete'](1);
+      } catch (e$) {}
+    }()), 'return false on primitive');
+  });
+  it('WeakMap#get', function(proclaim){
+    var M, a;
+    proclaim.isFunction(WeakMap.prototype.get);
+    name(WeakMap.prototype.get, 'get');
+    proclaim.arity(WeakMap.prototype.get, 1);
+    proclaim.nonEnumerable(WeakMap.prototype, 'get');
+    M = new WeakMap();
+    proclaim.strictEqual(M.get({}), void 8, 'WeakMap .get() before .set() return undefined');
+    M.set(a = {}, 42);
+    proclaim.strictEqual(M.get(a), 42, 'WeakMap .get() return value');
+    M['delete'](a);
+    proclaim.strictEqual(M.get(a), void 8, 'WeakMap .get() after .delete() return undefined');
+    proclaim.ok((function(){
+      try {
+        return void 8 === M.get(1);
+      } catch (e$) {}
+    }()), 'return undefined on primitive');
+  });
+  it('WeakMap#has', function(proclaim){
+    var M, a;
+    proclaim.isFunction(WeakMap.prototype.has);
+    name(WeakMap.prototype.has, 'has');
+    proclaim.arity(WeakMap.prototype.has, 1);
+    proclaim.nonEnumerable(WeakMap.prototype, 'has');
+    M = new WeakMap();
+    proclaim.ok(!M.has({}), 'WeakMap .has() before .set() return false');
+    M.set(a = {}, 42);
+    proclaim.ok(M.has(a), 'WeakMap .has() return true');
+    M['delete'](a);
+    proclaim.ok(!M.has(a), 'WeakMap .has() after .delete() return false');
+    proclaim.ok((function(){
+      try {
+        return !M.has(1);
+      } catch (e$) {}
+    }()), 'return false on primitive');
+  });
+  it('WeakMap#set', function(proclaim){
+    var x$, a, wmap;
+    proclaim.isFunction(WeakMap.prototype.set);
+    name(WeakMap.prototype.set, 'set');
+    proclaim.arity(WeakMap.prototype.set, 2);
+    proclaim.nonEnumerable(WeakMap.prototype, 'set');
+    proclaim.deepEqual((x$ = new WeakMap(), x$.set(a = {}, 42), x$).get(a), 42, 'works with object as keys');
+    proclaim.ok((function(){
+      try {
+        new WeakMap().set(42, 42);
+        return false;
+      } catch (e$) {
+        e = e$;
+        return true;
+      }
+    }()), 'throws with primitive keys');
+    wmap = new WeakMap();
+    proclaim.deepEqual(wmap.set({}, 1), wmap, 'return this');
+	});
+if (typeof Symbol != 'undefined' && 'toStringTag' in Symbol) {
+	it('WeakMap#@@toStringTag', function (proclaim) {
+		proclaim.strictEqual(WeakMap.prototype[Symbol.toStringTag], 'WeakMap');
+	});
+}
