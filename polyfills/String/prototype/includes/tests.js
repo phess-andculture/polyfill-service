@@ -62,16 +62,18 @@ it('works as expected', function(){
     re = /./;
     proclaim.throws(function(){
       '/./'.includes(re);
-    }, TypeError);
-    re[typeof Symbol != 'undefined' && Symbol !== null ? Symbol.match : void 8] = false;
-    proclaim.ok((function(){
-      try {
-        return '/./'.includes(re);
-      } catch (e$) {
-        e = e$;
-        return false;
-      }
-    }()));
+		}, TypeError);
+	if ('Symbol' in window && 'match' in Symbol) {
+		re[typeof Symbol != 'undefined' && Symbol !== null ? Symbol.match : void 8] = false;
+		proclaim.ok((function () {
+			try {
+				return '/./'.includes(re);
+			} catch (e$) {
+				e = e$;
+				return false;
+			}
+		}()));
+	}
     O = {};
     proclaim.ok((function(){
       try {
@@ -80,9 +82,11 @@ it('works as expected', function(){
         e = e$;
         return false;
       }
-    }()));
-    O[typeof Symbol != 'undefined' && Symbol !== null ? Symbol.match : void 8] = true;
-    proclaim.throws(function(){
-      '[object Object]'.includes(O);
-    }, TypeError);
+		}()));
+	if ('Symbol' in window && 'match' in Symbol) {
+		O[typeof Symbol != 'undefined' && Symbol !== null ? Symbol.match : void 8] = true;
+		proclaim.throws(function () {
+			'[object Object]'.includes(O);
+		}, TypeError);
+	}
 });
