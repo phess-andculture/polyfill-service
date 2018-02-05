@@ -32,7 +32,7 @@ it('has correct arity', function () {
 
 it('has correct name', function() {
 	// TODO: Improve function.prototype.name getter and apply it to all browsers which require it.
-	// proclaim.name(Promise.prototype['finally'], 'finally');
+	// proclaim.hasName(Promise.prototype['finally'], 'finally');
 });
 
 it('is not enumerable', function () {

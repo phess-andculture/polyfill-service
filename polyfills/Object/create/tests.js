@@ -132,7 +132,7 @@ it('Object.create', function () {
 	};
 	proclaim.isFunction(Object.create);
 	proclaim.arity(Object.create, 2);
-	proclaim.name(Object.create, 'create');
+	proclaim.hasName(Object.create, 'create');
 	proclaim.nonEnumerable(Object, 'create');
 	proclaim.ok(isPrototype(obj, Object.create(obj)));
 	proclaim.ok(Object.create(obj).q === 1);

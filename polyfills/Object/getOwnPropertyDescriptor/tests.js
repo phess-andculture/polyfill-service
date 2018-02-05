@@ -5,7 +5,7 @@ proclaim.arity = function (fn, expected) {
 	this.isFunction(fn);
 	this.strictEqual(fn.length, expected);
 };
-proclaim.name = function (fn, expected) {
+proclaim.hasName = function (fn, expected) {
 	var functionsHaveNames = (function foo() { }).name === 'foo';
 	if (functionsHaveNames) {
 		this.strictEqual(fn.name, expected);
@@ -53,7 +53,7 @@ it('has correct arity', function () {
 });
 
 it('has correct name', function() {
-	proclaim.name(Object.getOwnPropertyDescriptor, 'getOwnPropertyDescriptor');
+	proclaim.hasName(Object.getOwnPropertyDescriptor, 'getOwnPropertyDescriptor');
 });
 
 it('is not enumerable', function () {
