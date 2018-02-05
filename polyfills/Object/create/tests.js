@@ -101,3 +101,64 @@ it("If the second argument is present and not undefined, add own properties to r
 	proclaim.equal(result1, true);
 	// proclaim.equal(result2, true);
 });
+
+it('Object.create', function () {
+	var obj = {
+		q: 1
+	};
+	function has(x, xs){
+    var i = -1, l = xs.length >>> 0;
+    while (++i < l) if (x === xs[i]) return true;
+    return false;
+  }
+	function isObject(it) {
+		return it === Object(it);
+	};
+	function isPrototype(a, b) {
+		return {}.isPrototypeOf.call(a, b);
+	};
+	function getPropertyNames(object) {
+		var result = Object.getOwnPropertyNames(object);
+		while (object = Object.getPrototypeOf(object)) {
+			var i = 0;
+			var ref = Object.getOwnPropertyNames(object);
+			var len = ref.length;
+			for (len = ref.length; i < len; ++i) {
+				var x = ref[i];
+				has(x, result) || result.push(x);
+			}
+		}
+		return result;
+	};
+	proclaim.isFunction(Object.create);
+	proclaim.arity(Object.create, 2);
+	proclaim.name(Object.create, 'create');
+	proclaim.nonEnumerable(Object, 'create');
+	proclaim.ok(isPrototype(obj, Object.create(obj)));
+	proclaim.ok(Object.create(obj).q === 1);
+	function fn() {
+		return this.a = 1;
+	};
+	proclaim.ok(Object.create(new fn) instanceof fn);
+	if ('getPrototypeOf' in Object) {
+		proclaim.ok(fn.prototype === Object.getPrototypeOf(Object.getPrototypeOf(Object.create(new fn))));
+	}
+	proclaim.ok(Object.create(new fn).a === 1);
+	proclaim.ok(Object.create({}, {
+		a: {
+			value: 42
+		}
+	}).a === 42);
+	obj = Object.create(null, {
+		w: {
+			value: 2
+		}
+	});
+	proclaim.ok(isObject(obj));
+	proclaim.ok(!('toString' in obj));
+	proclaim.ok(obj.w === 2);
+
+	if ('getOwnPropertyNames' in Object && 'getPrototypeOf' in Object) {
+		proclaim.deepEqual(getPropertyNames(Object.create(null)), []);
+	}
+});
