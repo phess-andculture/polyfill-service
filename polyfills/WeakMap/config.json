@@ -17,10 +17,22 @@
 		"bb": "10 - *"
 	},
 	"dependencies": [
-		"Object.defineProperty",
-		"Array.prototype.forEach",
-		"Date.now"
+		"_ESAbstract.CreateMethodProperty",
+		"_ESAbstract.Call",
+		"_ESAbstract.Get",
+		"_ESAbstract.GetIterator",
+		"_ESAbstract.IsCallable",
+		"_ESAbstract.IteratorClose",
+		"_ESAbstract.IteratorNext",
+		"_ESAbstract.IteratorStep",
+		"_ESAbstract.IteratorValue",
+		"_ESAbstract.OrdinaryCreateFromConstructor",
+		"_ESAbstract.SameValue",
+		"_ESAbstract.Type",
+		"Array.isArray",
+		"Symbol",
+		"Object.defineProperty"
 	],
-	"license": "https://github.com/webcomponents/webcomponentsjs/blob/master/LICENSE.md",
-	"docs": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap"
+	"docs": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap",
+	"spec": "https://tc39.github.io/ecma262/#sec-weakmap-objects"
 }
