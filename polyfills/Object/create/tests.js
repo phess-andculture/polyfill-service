@@ -1,6 +1,36 @@
 /* eslint-env mocha, browser */
 /* global proclaim */
 
+proclaim.arity = function (fn, expected) {
+	proclaim.isFunction(fn);
+	proclaim.strictEqual(fn.length, expected);
+};
+proclaim.hasName = function (fn, expected) {
+	var functionsHaveNames = (function foo() { }).name === 'foo';
+	if (functionsHaveNames) {
+		proclaim.strictEqual(fn.name, expected);
+	} else {
+		proclaim.equal(Function.prototype.toString.call(fn).match(/function\s*([^\s]*)\s*\(/)[1], expected);
+	}
+};
+proclaim.nonEnumerable = function (obj, prop) {
+	var arePropertyDescriptorsSupported = function () {
+		var obj = {};
+		try {
+			Object.defineProperty(obj, 'x', { enumerable: false, value: obj });
+			/* eslint-disable no-unused-vars, no-restricted-syntax */
+			for (var _ in obj) { return false; }
+			/* eslint-enable no-unused-vars, no-restricted-syntax */
+			return obj.x === obj;
+		} catch (e) { // this is IE 8.
+			return false;
+		}
+	};
+	if (Object.defineProperty && arePropertyDescriptorsSupported()) {
+		proclaim.isFalse(Object.prototype.propertyIsEnumerable.call(obj[prop]));
+	}
+};
+
 it("Should create inherited object", function() {
 	var parent = { foo: 'bar', obj: {} };
 	var child = Object.create(parent);
