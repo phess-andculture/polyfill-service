@@ -79,15 +79,17 @@ it('works as expected', function () {
 	proclaim.throws(function () {
 		'/./'.endsWith(re);
 	}, TypeError);
-	re[typeof Symbol != 'undefined' && Symbol !== null ? Symbol.match : void 8] = false;
-	proclaim.ok((function () {
-		try {
-			return '/./'.endsWith(re);
-		} catch (e$) {
-			e = e$;
-			return false;
-		}
-	}()));
+	if ('Symbol' in window && 'match' in Symbol) {
+		re[typeof Symbol != 'undefined' && Symbol !== null ? Symbol.match : void 8] = false;
+		proclaim.ok((function () {
+			try {
+				return '/./'.endsWith(re);
+			} catch (e$) {
+				e = e$;
+				return false;
+			}
+		}()));
+	}
 	O = {};
 	proclaim.ok((function () {
 		try {
@@ -97,9 +99,11 @@ it('works as expected', function () {
 			return false;
 		}
 	}()));
-	O[typeof Symbol != 'undefined' && Symbol !== null ? Symbol.match : void 8] = true;
-	proclaim.throws(function () {
-		'[object Object]'.endsWith(O);
-	}, TypeError);
+	if ('Symbol' in window && 'iterator' in Symbol) {
+		O[typeof Symbol != 'undefined' && Symbol !== null ? Symbol.match : void 8] = true;
+		proclaim.throws(function () {
+			'[object Object]'.endsWith(O);
+		}, TypeError);
+	}
 });
 
